@@ -1,27 +1,17 @@
 
 from flask import Flask, render_template, request, jsonify
-from datetime import datetime
+
+from database import add_message, add_room, join_room, list_messages, list_rooms
 
 app = Flask(__name__)
 
-rooms = [
-    {"id": 1, "name": "Tech Talk", "topic": "AI, apps, coding & startups", "listeners": 245, "host": "Alex"},
-    {"id": 2, "name": "Late Night", "topic": "Relaxed conversations after dark", "listeners": 198, "host": "Emma"},
-    {"id": 3, "name": "Music Vibes", "topic": "Music, artists and good energy", "listeners": 156, "host": "John"},
-]
-
-messages = [
-    {"user": "Emma", "text": "This is so interesting! 🔥", "time": "Now"},
-    {"user": "John", "text": "Amazing conversation!", "time": "Now"},
-]
-
 @app.route("/")
 def home():
-    return render_template("index.html", rooms=rooms)
+    return render_template("index.html", rooms=list_rooms())
 
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
-    return jsonify(rooms)
+    return jsonify(list_rooms())
 
 @app.route("/api/rooms", methods=["POST"])
 def create_room():
@@ -32,19 +22,12 @@ def create_room():
     if not name:
         return jsonify({"error": "Room name is required"}), 400
 
-    new_room = {
-        "id": max([r["id"] for r in rooms], default=0) + 1,
-        "name": name,
-        "topic": topic,
-        "listeners": 1,
-        "host": "You",
-    }
-    rooms.insert(0, new_room)
+    new_room = add_room(name, topic)
     return jsonify(new_room), 201
 
 @app.route("/api/rooms/<int:room_id>/join", methods=["POST"])
 def join_room(room_id):
-    room = next((r for r in rooms if r["id"] == room_id), None)
+    room = join_room(room_id)
     if not room:
         return jsonify({"error": "Room not found"}), 404
 
@@ -56,7 +39,7 @@ def join_room(room_id):
 
 @app.route("/api/messages", methods=["GET"])
 def get_messages():
-    return jsonify(messages)
+    return jsonify(list_messages())
 
 @app.route("/api/messages", methods=["POST"])
 def send_message():
@@ -65,12 +48,7 @@ def send_message():
     if not text:
         return jsonify({"error": "Message cannot be empty"}), 400
 
-    msg = {
-        "user": "You",
-        "text": text,
-        "time": datetime.now().strftime("%I:%M %p")
-    }
-    messages.append(msg)
+    msg = add_message(text)
     return jsonify(msg), 201
 
 if __name__ == "__main__":

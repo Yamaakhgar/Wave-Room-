@@ -7,6 +7,15 @@ A simple WaveRoom demo built with:
 - Python + Flask
 - Included images/assets
 
+## Supabase setup
+
+1. Create a Supabase project.
+2. Open **SQL Editor** and run `supabase_schema.sql`.
+3. Copy `.env.example` to `.env`.
+4. Fill in `SUPABASE_URL` and the server-only `SUPABASE_SERVICE_ROLE_KEY`.
+
+Never put the service role key in browser JavaScript or commit `.env` to GitHub.
+
 ## How to run on Windows
 
 1. Install Python from https://www.python.org/
