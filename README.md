@@ -32,17 +32,23 @@ python app.py
 
 http://127.0.0.1:5000
 
-## What works in this demo
+## Current functionality
 
 - WaveRoom home page
 - Live room cards
 - Join room button
 - Create a new room
-- Simple message sending
+- Persistent rooms and messages through Supabase
 - Dark/light theme
 - Responsive mobile layout
 
+## Deploy with Render
+
+Create a Render Web Service from this repository. Render can use `render.yaml`
+automatically. Add the two Supabase environment variables when prompted, then
+deploy with the generated public URL.
+
 ## Important
 
-This is a local demo. Real voice calls, permanent accounts, databases,
-notifications, security, and app-store publishing need additional backend/services.
+Real voice calls, accounts, payments, notifications, and moderation still need
+additional services and product work before accepting customers or payments.

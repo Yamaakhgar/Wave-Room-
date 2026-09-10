@@ -16,3 +16,12 @@ create table if not exists public.messages (
 
 alter table public.rooms enable row level security;
 alter table public.messages enable row level security;
+
+insert into public.rooms (name, topic, listeners, host)
+select seed.name, seed.topic, seed.listeners, seed.host
+from (values
+  ('Tech Talk', 'AI, apps, coding & startups', 245, 'Alex'),
+  ('Late Night', 'Relaxed conversations after dark', 198, 'Emma'),
+  ('Music Vibes', 'Music, artists and good energy', 156, 'John')
+) as seed(name, topic, listeners, host)
+where not exists (select 1 from public.rooms);

@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, jsonify
 
-from database import add_message, add_room, join_room, list_messages, list_rooms
+from database import add_message, add_room, join_room as increment_room_listener, list_messages, list_rooms
 
 app = Flask(__name__)
 
@@ -27,11 +27,10 @@ def create_room():
 
 @app.route("/api/rooms/<int:room_id>/join", methods=["POST"])
 def join_room(room_id):
-    room = join_room(room_id)
+    room = increment_room_listener(room_id)
     if not room:
         return jsonify({"error": "Room not found"}), 404
 
-    room["listeners"] += 1
     return jsonify({
         "message": f"You joined {room['name']}",
         "room": room
