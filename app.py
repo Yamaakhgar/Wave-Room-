@@ -5,9 +5,16 @@ from database import add_message, add_room, join_room as increment_room_listener
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["GET", "HEAD"])
 def home():
+    if request.method == "HEAD":
+        return "", 200
     return render_template("index.html", rooms=list_rooms())
+
+
+@app.route("/healthz", methods=["GET", "HEAD"])
+def health_check():
+    return jsonify({"status": "ok"})
 
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
